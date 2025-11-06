@@ -1,0 +1,91 @@
+<div class="manga" *ngIf="manga">
+  <div class="manga-header">
+    <div class="cover">
+      <ng-container *ngIf="volumes && volumes.length > 0; else noVolume">
+        <ng-container *ngIf="firstVolumeWithImage; else noImg">
+          <img [src]="'http://localhost:8080/' + firstVolumeWithImage.imgPath" 
+              [alt]="manga.name" />
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noVolume>
+        <div class="noImg">Aucun tome disponible</div>
+      </ng-template>
+
+      <ng-template #noImg>
+        <div class="noImg">Aucune image disponible pour cette série</div>
+      </ng-template>
+    </div>
+
+
+    <div class="manga-detail">
+      <div class="infos-boutons">
+        <div class="infos">
+          <h2>{{ manga.name }}</h2>
+          <p><strong>Auteur :</strong> {{ manga.author }}</p>
+          <p><strong>Statut :</strong> {{ getStatutLabel(manga.statut) }}</p>
+          <p><strong>Nombre de volumes :</strong> {{ manga.volumeCount }}/{{ manga.volumeNb }}</p>
+        </div>
+
+        <div class="boutons">
+          <a [routerLink]="['/manga/edit/', manga.id]" class="modifier">
+            Modifier les infos
+          </a>
+          <button class="supprimer" (click)="supprimerManga()">
+            Supprimer le manga
+          </button>
+        </div>
+      </div>
+
+      <div class="resume" *ngIf="volumes[0]?.resume">
+        <h3>Résumé :</h3>
+        <p>{{ volumes[0].resume }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="volume-section" *ngIf="normalVolumes.length > 0">
+    <div class="Tome">
+      <h3>Tomes :</h3>
+    </div>
+    <div class="volume-list">
+      <div *ngFor="let volume of normalVolumes">
+        <a [routerLink]="['/volume', volume.id]">
+          <div class="volume-card">
+            <img *ngIf="volume.imgPath; else noImg" [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+            <ng-template #noImg>
+              <div class="noImg"> Pas de cover dispo pour ce tome</div>
+            </ng-template>
+            <p>Tome {{ volume.numero }}</p>
+          </div>
+        </a>
+      </div>
+
+      <a [routerLink]="[ '/manga',manga.id,'volume']">
+        <div class="volume-add">
+          <p>Ajouter un tome</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="volume-section" id="collector" *ngIf="collectorVolumes.length > 0">
+    <div class="Tome">
+      <h3>Collector :</h3>
+    </div>
+    <div class="volume-list">
+      <div *ngFor="let volume of collectorVolumes">
+        <a [routerLink]="['/volume', volume.id]">
+          <div class="volume-card">
+            <img *ngIf="volume.imgPath; else noImg" [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+            <ng-template #noImg>
+              <div class="noImg"> Pas de cover dispo pour ce tome</div>
+            </ng-template>
+            <p>Tome {{ volume.numero }} - Collector</p>
+
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

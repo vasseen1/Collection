@@ -1,0 +1,33 @@
+<div class="modifier" *ngIf="manga">
+  <h2>Modifier les informations de la série : </h2>
+
+  <form (ngSubmit)="updateManga()">
+    <div class="form-group">
+      <label>Nom du Manga : </label>
+      <input type="text" [(ngModel)]="manga.name" name="name" [placeholder]="manga.name" />
+    </div>
+
+    <div class="form-group">
+      <label>Nombre total de tomes : </label>
+      <input type="number" [(ngModel)]="manga.volumeNb" name="volumeNb" [placeholder]="manga.volumeNb" />
+    </div>
+
+    <div class="form-group">
+      <label>Auteur : </label>
+      <input type="text" [(ngModel)]="manga.author" name="author" [placeholder]="manga.author" />
+    </div>
+
+    <!-- Exemple d’un menu déroulant pour le statut -->
+    <div class="form-group">
+      <label>Statut : </label>
+      <select [(ngModel)]="manga.statut" name="statut">
+        <option value="EN_COURS">En cours</option>
+        <option value="TERMINE">Terminé</option>
+        <option value="ARRETE">Arrêté</option>
+        <option value="EN_ATTENTE">En pause</option>
+      </select>
+    </div>
+
+    <button type="submit" class="submit-btn">Enregistrer</button>
+  </form>
+</div>

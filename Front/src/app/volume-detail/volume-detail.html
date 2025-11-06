@@ -1,0 +1,36 @@
+<div class="volume" *ngIf="volume && manga">
+  <div class="volume-header">
+    <div class="cover">
+      <img *ngIf="volume.imgPath; else noImg" [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+      <ng-template #noImg>
+          <div class="noImg"> Aucune image disponible</div>
+        </ng-template>
+    </div>
+
+    <div class="volume-detail">
+      <div class="infos-boutons">
+        <div class="infos">
+          <h2 *ngIf="volume.collector; else titleOnly">
+            {{ manga.name }} - Tome {{ volume.numero }} Collector
+          </h2>
+          <ng-template #titleOnly>
+            <h2>{{ manga.name }} - Tome {{ volume.numero }}</h2>
+          </ng-template>
+          <p><strong>Auteur :</strong> {{ manga.author }}</p>
+          
+          
+        </div>
+
+        <div class="boutons">
+          <a [routerLink]="['/volume/edit/', volume.id]" class="modifier">Modifier le tome</a>
+          <button class="supprimer" (click)="supprimerVolume()">Supprimer le tome</button>
+        </div>
+      </div>
+
+      <div class="resume" *ngIf="volume.resume">
+        <h3>Résumé :</h3>
+        <p>{{ volume.resume }}</p>
+      </div>
+    </div>
+  </div>
+</div>

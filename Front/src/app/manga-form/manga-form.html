@@ -1,0 +1,80 @@
+<div class="ajouter">
+  <h2>Ajouter une nouvelle série et son premier tome</h2>
+
+  <form (ngSubmit)="createManga()">
+    
+    <div class="form-row">
+
+      <!-- Colonne Manga -->
+      <div class="form-column">
+        <h3>Manga</h3>
+        <div class="form-group">
+          <label>Nom du Manga :</label>
+          <input type="text" [(ngModel)]="manga.name" name="name" placeholder="Titre du manga"/>
+        </div>
+        <div class="twoInOne">
+          <div class="form-group">
+            <label>Nombre total de tomes :</label>
+            <input type="number" [(ngModel)]="manga.volumeNb" name="volumeNb" class="number" />
+          </div>
+
+          <div class="form-group">
+            <label>Statut :</label>
+            <select [(ngModel)]="manga.statut" name="statut">
+              <option value="EN_COURS">En cours</option>
+              <option value="TERMINE">Terminé</option>
+              <option value="ARRETE">Arrêté</option>
+              <option value="EN_ATTENTE">En pause</option>
+            </select>
+          </div>
+        </div>
+      
+
+        <div class="form-group">
+          <label>Auteur :</label>
+          <br/>
+          <input type="text" [(ngModel)]="manga.author" name="author" placeholder="Nom de l'auteur"/>
+        </div>
+      </div>
+        
+
+      <!-- Colonne Tome -->
+      <div class="form-column">
+        <h3>Premier Tome</h3>
+        <div class="form-group">
+          <label>Série :</label>
+          <label>{{manga.name}}</label> 
+        </div>
+
+        <div class="twoInOne">
+          <div class="form-group">
+            <label>Numéro du tome :</label>
+            <input type="number" name="numero" [(ngModel)]="volume.numero" class="number"/>
+          </div>
+
+          <div class="form-group">
+            <label>Collector :</label>
+            <select name="collector" [(ngModel)]="volume.collector">
+              <option value="true">Oui</option>
+              <option value="false">Non</option>
+            </select>
+          </div>
+        </div>
+          
+
+        <div class="form-group">
+          <label>Image du tome :</label>
+          <input type="file" (change)="onFileSelected($event)"/>
+        </div>
+
+        <div class="form-group">
+          <label>Résumé :</label>
+          <textarea [(ngModel)]="volume.resume" name="resume" rows="6" placeholder="Résumé du tome"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <button type="submit" class="submit-btn">Enregistrer</button>
+  </form>
+</div>

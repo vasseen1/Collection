@@ -1,0 +1,152 @@
+.manga-card {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem;
+  width: 200px;        /* largeur fixe */
+  height: 350px;       /* hauteur fixe pour toutes les cartes */
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;  /* aligne correctement les cartes */
+  background-color: #2c2c2c;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.manga-add {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem;
+  width: 200px;        /* largeur fixe */
+  height: 350px;       /* hauteur fixe pour toutes les cartes */
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: top;  /* aligne correctement les cartes */
+  background-color: #2c2c2c;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #ffb347;
+  ;
+}
+
+.manga-add:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255,179,71,0.4);
+}
+
+.manga-container {
+  display: flex;           
+  flex-wrap: wrap;          
+  justify-content: flex-start; 
+  gap: 1rem;                
+  padding: 1rem;            
+}
+
+.manga-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255,179,71,0.4);
+}
+
+.manga-card img {
+  width: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+
+.cover {
+  width: 100%;
+  aspect-ratio: 2/3;      /* hauteur proportionnelle à la largeur */
+  object-fit: contain;     /* garde l'image entière, pas de crop */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.noImg {
+  width: 100%;
+  aspect-ratio: 2/3;      /* hauteur proportionnelle à la largeur */
+  object-fit: contain;     /* garde l'image entière, pas de crop */
+  color:#ffb347;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bas {
+  background-color: grey;
+  color: white;
+  display: flex;
+  justify-content: space-between; /* titre gauche / nb droite */
+  align-items: center; /* centrage vertical */
+  padding: 0.5rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  margin-top: 5px;
+}
+
+.name, .total {
+  margin: 0; /* on vire les marges des <p> */
+}
+
+
+.statut {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+
+.TERMINE {
+    background-color: green;
+}
+
+.EN_COURS {
+    background-color: blue;
+}
+
+.ARRETE {
+    background-color: red;
+
+}
+
+.EN_ATTENTE{
+    background-color: #d400f5;
+
+}
+
+a {
+  text-decoration: none;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 20px;
+  gap:10px;
+}
+
+#statutFilter {
+  color:#ffb347;
+  background-color: #2c2c2c;
+  border-color: #2c2c2c;
+  border-radius: 7px;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.filter :hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255,179,71,0.4);
+}
+
