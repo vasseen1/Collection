@@ -63,7 +63,7 @@ export class VolumeForm implements OnInit {
     this.volumeService.createVolume(this.volume,this.manga.id).subscribe({
       next: () => {
         alert('Tome créé avec succès !');
-        this.router.navigate([`/manga/${this.manga?.id}`]); // 🔥 retour vers la page du manga
+        this.router.navigate([`/manga/${this.manga?.id}`]); 
       },
       error: (err) => console.error('Erreur création tome :', err)
     });
