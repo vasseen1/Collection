@@ -4,6 +4,7 @@ import { Manga, MangaService } from '../Service/manga.service';
 import { Volume, VolumeService } from '../Service/volume.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationsService } from '../Service/notifications-service';
 
 @Component({
   selector: 'app-manga-form',
@@ -38,7 +39,8 @@ export class MangaForm implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private mangaService: MangaService,
-      private volumeService: VolumeService
+      private volumeService: VolumeService,
+      private notificationService : NotificationsService
     ) {}
 
     ngOnInit(): void {
@@ -61,6 +63,10 @@ export class MangaForm implements OnInit {
       }
     }
 
+    Retour(): void {
+      this.router.navigate([`/`])
+    }
+
     createManga(): void {
 
       this.mangaService.createManga(this.manga).subscribe({
@@ -69,14 +75,20 @@ export class MangaForm implements OnInit {
 
           this.volumeService.createVolume(this.volume,this.volume.mangaId).subscribe({
             next: () => {
-              alert('Série et Tome créées avec succès !');
+              this.notificationService.show('Série et Tome créées avec succès !',"success");
               this.router.navigate([`/manga/${this.volume.mangaId}`]);
             },
-            error: (err) => console.error('Erreur création tome :', err)
+            error: (err) => {
+              console.error('Erreur création tome :', err);
+              this.notificationService.show('Erreur lors de la création du tome', "error");
+            }
           })
           
         },
-        error: (err) => console.error('Erreur création série :', err)
+        error: (err) => {
+          console.error('Erreur création série :', err);
+          this.notificationService.show('Erreur lors de la création de la série', 'error');
+        }
       });
     }
 

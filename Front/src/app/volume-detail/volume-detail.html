@@ -10,6 +10,7 @@
     <div class="volume-detail">
       <div class="infos-boutons">
         <div class="infos">
+          <a [routerLink]="['/manga', volume.mangaId]" class="go-back">Retour aux tomes</a>
           <h2 *ngIf="volume.collector; else titleOnly">
             {{ manga.name }} - Tome {{ volume.numero }} Collector
           </h2>

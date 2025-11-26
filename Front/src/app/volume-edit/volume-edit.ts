@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { VolumeService, Volume } from '../Service/volume.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationsService } from '../Service/notifications-service';
 
 @Component({
   selector: 'app-volume-edit',
@@ -19,14 +20,22 @@ export class VolumeEdit implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private volumeService: VolumeService,
-    private router: Router
+    private router: Router,
+    private notificationService : NotificationsService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.volumeService.getVolumeById(id).subscribe(volume => {
-      this.volume = volume;
+    this.volumeService.getVolumeById(id).subscribe({
+      next: (volume) => {
+        this.volume = volume;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du tome : ', err);
+        this.notificationService.show('Erreur lors de la récupération du tome', 'error');
+        this.router.navigate(['/']);
+      }
     });
   }
 
@@ -49,6 +58,10 @@ export class VolumeEdit implements OnInit {
     }
   }
 
+  Retour(): void {
+    this.router.navigate([`/volume/${this.volume?.id}`])
+  }
+
   updateVolume():void {
     if (!this.volume) return;
 
@@ -58,10 +71,13 @@ export class VolumeEdit implements OnInit {
 
     this.volumeService.updateVolume(this.volume.id, this.volume).subscribe({
       next: () => {
-        alert('Tome mis à jour avec succès');
-        this.router.navigate([`/manga/${this.volume?.mangaId}`]);
+        this.notificationService.show('Tome mis à jour avec succès', "success")
+        this.router.navigate([`/volume/${this.volume?.id}`]);
       },
-      error: (err) => console.error('Erreur lors de la mise à jour du tome : ', err),
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour du tome : ', err);
+        this.notificationService.show('Erreur lors de la mise à jour du Tome',"error");
+      }
     });
   }
 
