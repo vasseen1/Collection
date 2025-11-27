@@ -56,16 +56,7 @@
   object-fit: cover;
 }
 
-
 .cover {
-  width: 100%;
-  aspect-ratio: 2/3;      /* hauteur proportionnelle à la largeur */
-  object-fit: contain;     /* garde l'image entière, pas de crop */
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.noImg {
   width: 100%;
   aspect-ratio: 2/3;      /* hauteur proportionnelle à la largeur */
   object-fit: contain;     /* garde l'image entière, pas de crop */

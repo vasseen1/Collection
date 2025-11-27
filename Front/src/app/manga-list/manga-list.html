@@ -15,18 +15,20 @@
         <div class="statut">
           <p class="{{manga.statut}}">{{getStatutLabel(manga.statut)}}</p>
         </div>
-        <img *ngIf="manga.coverImg; else noImg"
+        <div class="cover" *ngIf="manga.coverImg; else noImg">
+          <img 
           [src]="'http://localhost:8080/'+ manga.coverImg"
-          alt="{{ manga.name }} cover"
-          class="cover" />
-        <ng-template #noImg>
-          <div class="noImg">
-             <p *ngIf="manga.volumeCount > 0; else noTome">Pas de cover pour ce manga</p>
-             <ng-template #noTome>
-              <p>Pas de tomes disponible pour ce manga</p>
-             </ng-template>
-          </div>
-        </ng-template>
+          alt="{{ manga.name }} cover"/>
+            <ng-template #noImg>
+            
+              <p *ngIf="manga.volumeCount > 0; else noTome">Pas de cover pour ce manga</p>
+              <ng-template #noTome>
+                <p>Pas de tomes disponible pour ce manga</p>
+              </ng-template>
+          </ng-template>
+
+        </div>
+        
         <div class="bas">
           <p class="name">{{ manga.name }}</p>
           <p class="total">{{ manga.volumeCount }}/{{ manga.volumeNb }}</p>
