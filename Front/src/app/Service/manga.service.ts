@@ -34,6 +34,10 @@ export class MangaService {
     return this.http.get<Manga>(`${this.baseUrl}/manga/${mangaId}`);
   }
 
+  getMangaByName(mangaName: string): Observable<Manga> {
+    return this.http.get<Manga>(`${this.baseUrl}/manga/name/${mangaName}`);
+  }
+
   deleteTome(mangaId: number) {
     return this.http.delete(`${this.baseUrl}/manga/${mangaId}`)
   }

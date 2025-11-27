@@ -52,14 +52,22 @@
       <div *ngFor="let volume of normalVolumes">
         <a [routerLink]="['/volume', volume.id]">
           <div class="volume-card">
-            <img *ngIf="volume.imgPath; else noImg" [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
-            <ng-template #noImg>
-              <div class="noImg"> Pas de cover dispo pour ce tome</div>
-            </ng-template>
+            <!-- Conteneur de l'image ou du message -->
+            <div class="volume-cover">
+              <ng-container *ngIf="volume.imgPath; else noImg">
+                <img [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+              </ng-container>
+              <ng-template #noImg>
+                <p>Pas de cover dispo pour ce tome</p>
+              </ng-template>
+            </div>
+
+            <!-- Texte du tome -->
             <p>Tome {{ volume.numero }}</p>
           </div>
         </a>
       </div>
+
 
       <a [routerLink]="[ '/manga',manga.id,'volume']">
         <div class="volume-add">
@@ -67,6 +75,7 @@
         </div>
       </a>
     </div>
+    
 
     <div class="volume-section" id="collector" *ngIf="collectorVolumes.length > 0">
     <div class="Tome">
@@ -76,12 +85,18 @@
       <div *ngFor="let volume of collectorVolumes">
         <a [routerLink]="['/volume', volume.id]">
           <div class="volume-card">
-            <img *ngIf="volume.imgPath; else noImg" [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
-            <ng-template #noImg>
-              <div class="noImg"> Pas de cover dispo pour ce tome</div>
-            </ng-template>
-            <p>Tome {{ volume.numero }} - Collector</p>
+            <!-- Conteneur de l'image ou du message -->
+            <div class="volume-cover">
+              <ng-container *ngIf="volume.imgPath; else noImg">
+                <img [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+              </ng-container>
+              <ng-template #noImg>
+                <p>Pas de cover dispo pour ce tome</p>
+              </ng-template>
+            </div>
 
+            <!-- Texte du tome -->
+            <p>Tome {{ volume.numero }} - Collector</p>
           </div>
         </a>
       </div>

@@ -16,11 +16,11 @@ export class MangaForm implements OnInit {
 
   manga: Manga = {
       id:undefined as any, 
-      name: ' ',
+      name: '',
       volumeNb: 0,
-      statut: ' ',
-      author: ' ',
-      coverImg: ' ',
+      statut: '',
+      author: '',
+      coverImg: '',
       volumeCount: 0,
     };
 
@@ -69,27 +69,60 @@ export class MangaForm implements OnInit {
 
     createManga(): void {
 
-      this.mangaService.createManga(this.manga).subscribe({
-        next: (createdManga) => {
-          this.volume.mangaId = createdManga.id;
+      if (!this.manga.name || this.manga.name.trim().length === 0) {
+        this.notificationService.show("Le titre ne peut pas être vide", "error");
+        return;
+      }
 
-          this.volumeService.createVolume(this.volume,this.volume.mangaId).subscribe({
-            next: () => {
-              this.notificationService.show('Série et Tome créées avec succès !',"success");
-              this.router.navigate([`/manga/${this.volume.mangaId}`]);
-            },
-            error: (err) => {
-              console.error('Erreur création tome :', err);
-              this.notificationService.show('Erreur lors de la création du tome', "error");
-            }
-          })
-          
+      if (!this.manga.volumeNb || this.manga.volumeNb < 1) {
+        this.notificationService.show("Le nombre total de tomes ne peut pas être vide", "error");
+        return;
+      }
+
+      if (!this.manga.statut) {
+        this.notificationService.show("Le statut ne peut pas être vide", "error");
+        return;
+      }
+
+      if (this.volume.numero > this.manga.volumeNb) {
+        this.notificationService.show("Le numéro du tome ne peut pas être au dessus du nombre total de tomes","error")
+        return;
+      }
+
+      this.mangaService.getMangaByName(this.manga.name).subscribe({
+        next: (existingManga) => {
+          this.notificationService.show("Ce manga existe déjà dans la base, impossible de le recrée", "error");
+          return;
         },
         error: (err) => {
-          console.error('Erreur création série :', err);
-          this.notificationService.show('Erreur lors de la création de la série', 'error');
+          if (err.status == 404) {
+            this.mangaService.createManga(this.manga).subscribe({
+                    next: (createdManga) => {
+                      this.volume.mangaId = createdManga.id;
+
+                      this.volumeService.createVolume(this.volume,this.volume.mangaId).subscribe({
+                        next: () => {
+                          this.notificationService.show('Série et Tome créées avec succès !',"success");
+                          this.router.navigate([`/manga/${this.volume.mangaId}`]);
+                        },
+                        error: (err) => {
+                          console.error('Erreur création tome :', err);
+                          this.notificationService.show('Erreur lors de la création du tome', "error");
+                        }
+                      })
+                      
+                    },
+                    error: (err) => {
+                      console.error('Erreur création série :', err);
+                      this.notificationService.show('Erreur lors de la création de la série', 'error');
+                    }
+            });
+          } else {
+            this.notificationService.show("Une erreur est survenue", "error");
+            console.error("Une erreur est survenue : ", err);
+          }
         }
-      });
+      })
     }
 
 }

@@ -15,6 +15,11 @@ public class MangaService {
     @Autowired
     private MangaRepository mangaRepository;
 
+    // Récupère un tome par son nom
+    public Optional<Manga> getMangaByName(String name) {
+        return mangaRepository.findByName(name);
+    }
+
     // Récupérer tous les mangas
     public List<Manga> getAllMangas() {
         return mangaRepository.findAllByOrderByNameAsc();

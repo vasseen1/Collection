@@ -41,11 +41,15 @@ public class VolumeService {
         }
     }
 
-    public Volume getFirstVolume(Long mangaId) {
+    public Optional<Volume> getFirstVolume(Long mangaId) {
         return volumeRepository.findFirstByMangaIdOrderByNumeroAsc(mangaId);
     }
 
     public Long getNumberOfManga(Long mangaId) {
         return volumeRepository.countDistinctByMangaId(mangaId);
+    }
+
+    public Optional<Volume> getVolumeByMangaIdAndByNumeroAndByCollector(Long mangaId, Long Numero, Boolean collector) {
+        return volumeRepository.findByMangaIdAndNumeroAndCollector(mangaId, Numero, collector);
     }
 }

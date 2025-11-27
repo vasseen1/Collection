@@ -28,6 +28,12 @@ public class VolumeController {
         return volumeService.getAllVolumesByMangaId(mangaId);
     }
 
+    @GetMapping("/manga/{mangaId}/volumeNumber/{Number}/collector/{collect}")
+    public ResponseEntity<Volume> getVolumeByMangaIdAndByNumeroAndByCollector(@PathVariable Long mangaId, @PathVariable Long Number, @PathVariable Boolean collect) {
+        Optional<Volume> volume = volumeService.getVolumeByMangaIdAndByNumeroAndByCollector(mangaId, Number, collect);
+        return volume.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // Récupérer un volume précis par son ID
     @GetMapping("/volume/{id}")
     public ResponseEntity<Volume> getVolumeById(@PathVariable Long id) {
@@ -68,12 +74,8 @@ public class VolumeController {
 
     @GetMapping("/volumes/first/{mangaId}")
     public ResponseEntity<Volume> getFirstVolume(@PathVariable Long mangaId) {
-        Volume firstVolume = volumeService.getFirstVolume(mangaId);
-        if (firstVolume != null) {
-            return ResponseEntity.ok(firstVolume);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Volume> firstVolume = volumeService.getFirstVolume(mangaId);
+        return firstVolume.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/manga/{mangaId}/volumes/total")

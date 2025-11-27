@@ -28,6 +28,14 @@ public class MangaController {
         return mangaService.getAllMangas();
     }
 
+    // Récupérer un manga par son nom
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Manga> getMangaByName(@PathVariable String name) {
+        Optional<Manga> manga = mangaService.getMangaByName(name);
+        return manga.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // Récupérer un manga par ID
     @GetMapping("/{id}")
     public ResponseEntity<Manga> getMangaById(@PathVariable Long id) {

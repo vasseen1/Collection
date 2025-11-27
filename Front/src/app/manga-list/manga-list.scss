@@ -67,6 +67,11 @@
   justify-content: center;
 }
 
+.cover img {
+  width: 100%;
+  height: 100%;
+}
+
 .bas {
   background-color: grey;
   color: white;
@@ -83,32 +88,53 @@
   margin: 0; /* on vire les marges des <p> */
 }
 
+.bas .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;  /* ou une largeur fixe en px */
+}
+
+
+
 
 .statut {
   position: absolute;
-  top: 5px;
+  top: 10px;
   right: 10px;
   color: white;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  padding: 2px 4px;           /* padding réduit en haut/bas */
+  border-radius: 3px;
+  margin: 0;
+  background-color: rgba(0,0,0,0.6);
+  line-height: 1;              /* réduit l'espace autour du texte */
+  height: auto;                /* hauteur automatique basée sur le contenu */
+  display: flex;               /* utilise flexbox */
+  align-items: center;         /* centre verticalement le contenu */
+}
+
+.statut p {
+  margin: 0;                   /* supprime les marges du <p> */
+  padding: 0;                  /* supprime les paddings du <p> */
+  line-height: 1;              /* ligne compacte */
 }
 
 
-.TERMINE {
+
+#TERMINE {
     background-color: green;
 }
 
-.EN_COURS {
+#EN_COURS {
     background-color: blue;
 }
 
-.ARRETE {
+#ARRETE {
     background-color: red;
 
 }
 
-.EN_ATTENTE{
+#EN_ATTENTE{
     background-color: #d400f5;
 
 }
