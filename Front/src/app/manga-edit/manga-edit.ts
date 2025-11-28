@@ -24,6 +24,9 @@ export class MangaEdit implements OnInit {
 
   manga?: Manga;
 
+  readonly statut = ["EN_COURS","TERMINE","ARRETE","EN_ATTENTE"];
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -75,6 +78,31 @@ export class MangaEdit implements OnInit {
 
   updateManga():void {
     if (!this.manga) return;
+
+    if (!this.manga.name || this.manga.name.trim().length === 0) {
+      this.notificationService.show("Le titre ne peut pas être vide", "error");
+      return;
+    }
+
+    if (!this.manga.volumeNb || this.manga.volumeNb < 1) {
+      this.notificationService.show("Le nombre total de tomes ne peut pas être vide", "error");
+      return;
+    }
+
+    if (this.manga.volumeNb > 1000) {
+      this.notificationService.show("Faut pas abuser non plus", "error");
+      return;
+    }
+
+    if (!this.manga.statut) {
+      this.notificationService.show("Le statut ne peut pas être vide", "error");
+      return;
+    }
+
+    if (!this.statut.includes(this.manga.statut)) {
+      this.notificationService.show('Bien essayé mais statut est vérifié','error');
+      return;
+    }
 
     this.mangaService.updateManga(this.manga.id, this.manga).subscribe({
       next: () => {

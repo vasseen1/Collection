@@ -24,6 +24,8 @@ export class MangaForm implements OnInit {
       volumeCount: 0,
     };
 
+
+
     volume: Volume = {
       id:undefined as any, 
       mangaId: 0,
@@ -34,6 +36,8 @@ export class MangaForm implements OnInit {
     };
 
     selectedFile?: File;
+
+    readonly statut = ["EN_COURS","TERMINE","ARRETE","EN_ATTENTE"];
 
     constructor(
       private route: ActivatedRoute,
@@ -79,13 +83,30 @@ export class MangaForm implements OnInit {
         return;
       }
 
+      if (this.manga.volumeNb > 1000) {
+        this.notificationService.show("Faut pas abuser non plus", "error");
+        return;
+      }
+
       if (!this.manga.statut) {
         this.notificationService.show("Le statut ne peut pas être vide", "error");
         return;
       }
 
+      if (!this.statut.includes(this.manga.statut)) {
+        this.notificationService.show('Bien essayé mais statut est vérifié','error');
+        return;
+      }
+
+
+
       if (this.volume.numero > this.manga.volumeNb) {
         this.notificationService.show("Le numéro du tome ne peut pas être au dessus du nombre total de tomes","error")
+        return;
+      }
+
+      if (this.volume.numero < 0) {
+        this.notificationService.show("Le numéro du tome ne peut pas être négatif","error")
         return;
       }
 

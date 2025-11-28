@@ -4,8 +4,14 @@
   <form (ngSubmit)="updateVolume()">
 
     <div class="form-group">
+      <label>Nom de la série : </label>
+      <label>{{this.manga?.name}}</label>
+    </div>
+
+    <div class="form-group">
       <label>Numéro du tome : </label>
       <input type="number" [(ngModel)]="volume.numero" name="numero" [placeholder]="volume.numero" />
+      <p>Ce nombre ne peut dépasser {{this.manga?.volumeNb}} </p>
     </div>
 
     <div class="form-group">

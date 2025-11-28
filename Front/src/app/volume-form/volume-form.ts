@@ -78,6 +78,11 @@ export class VolumeForm implements OnInit {
       return;
     }
 
+    if (this.volume.numero < 0) {
+      this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
+      return;
+    }
+
     this.volumeService.getVolumeByMangaAndNumberAndCollector(this.manga.id, this.volume.numero, this.volume.collector).subscribe({
       next: (existingVolume) => {
         this.notificationService.show("Impossible d'ajouter ce tome car il existe déjà", "error");

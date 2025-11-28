@@ -9,11 +9,11 @@
       </ng-container>
 
       <ng-template #noVolume>
-        <div class="noImg">Aucun tome disponible</div>
+        <p class="noImg">Aucun tome disponible</p>
       </ng-template>
 
       <ng-template #noImg>
-        <div class="noImg">Aucune image disponible pour cette série</div>
+        <p class="noImg">Aucune image disponible pour cette série</p>
       </ng-template>
     </div>
 
@@ -22,7 +22,7 @@
       <div class="infos-boutons">
         <div class="infos">
           <h2>{{ manga.name }}</h2>
-          <p><strong>Auteur :</strong> {{ manga.author }}</p>
+          <p *ngIf="this.manga.author"><strong>Auteur :</strong> {{ manga.author }}</p>
           <p><strong>Statut :</strong> {{ getStatutLabel(manga.statut) }}</p>
           <p><strong>Nombre de volumes :</strong> {{ manga.volumeCount }}/{{ manga.volumeNb }}</p>
         </div>

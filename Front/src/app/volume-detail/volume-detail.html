@@ -1,11 +1,19 @@
 <div class="volume" *ngIf="volume && manga">
   <div class="volume-header">
     <div class="cover">
-      <img *ngIf="volume.imgPath; else noImg" [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
-      <ng-template #noImg>
-          <div class="noImg"> Aucune image disponible</div>
-        </ng-template>
+      <ng-container *ngIf="volume.imgPath; else noImgText">
+        <img 
+          [src]="'http://localhost:8080/' + volume.imgPath"
+          [alt]="'Tome ' + volume.numero"
+        />
+      </ng-container>
+
+      <ng-template #noImgText>
+        <p>Aucune image disponible</p>
+      </ng-template>
     </div>
+
+
 
     <div class="volume-detail">
       <div class="infos-boutons">
@@ -17,7 +25,7 @@
           <ng-template #titleOnly>
             <h2>{{ manga.name }} - Tome {{ volume.numero }}</h2>
           </ng-template>
-          <p><strong>Auteur :</strong> {{ manga.author }}</p>
+          <p *ngIf="this.manga.author"><strong>Auteur :</strong> {{ manga.author }}</p>
           
           
         </div>
