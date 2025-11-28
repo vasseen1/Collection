@@ -56,6 +56,7 @@ export class VolumeEdit implements OnInit {
       const file: File = event.target.files[0];
       if (file) {
         this.selectedFile = file; // Stocke pour l’envoyer avec FormData lors de createVolume
+        this.deleteImage = true;
       }
     }
 

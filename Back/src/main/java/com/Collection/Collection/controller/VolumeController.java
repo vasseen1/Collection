@@ -50,7 +50,6 @@ public class VolumeController {
     }
 
     // Ajouter un nouveau volume pour un manga spécifique
-     // Ajouter un nouveau volume pour un manga spécifique (avec image optionnelle)
     @PostMapping("/manga/{mangaId}/volumes")
     public ResponseEntity<Volume> createVolume(
             @PathVariable Long mangaId,
