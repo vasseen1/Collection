@@ -51,9 +51,9 @@ export class MangaListComponent implements OnInit {
         // Pour chaque manga, récupère le premier volume et le nombre de volumes
         this.mangas.forEach(manga => {
           // Premier volume pour la jaquette
-          this.mangaService.getFirstVolume(manga.id).subscribe({
+          this.mangaService.getFirstVolumeWithImage(manga.id).subscribe({
             next:(volume) => {
-              manga.coverImg = volume.imgPath;
+              manga.coverImg = volume?.imgPath;
             },
             error: (err) => {
               console.error('Erreur lors de la récupération de la jaquette : ', err);

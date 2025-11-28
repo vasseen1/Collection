@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Volume } from './volume.service';
 
 export interface Manga {
@@ -49,6 +49,13 @@ export class MangaService {
   getFirstVolume(mangaId: number): Observable<Volume> {
     return this.http.get<Volume>(`${this.baseUrl}/volumes/first/${mangaId}`);
   }
+
+  getFirstVolumeWithImage(mangaId: number) {
+  return this.http.get<Volume[]>(`${this.baseUrl}/manga/${mangaId}/volumes`).pipe(
+    map(volumes => volumes.find(v => v.imgPath)) // renvoie le premier volume qui a une image
+  );
+}
+
 
   createManga(manga: Manga): Observable<Manga> {
     return this.http.post<Manga>(`${this.baseUrl}/manga`, manga)
