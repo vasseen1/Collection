@@ -18,6 +18,7 @@ export class VolumeEdit implements OnInit {
   volume?: Volume;
   manga?: Manga;
   deleteImage: boolean = false;
+  selectedFile?: File;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,23 +53,11 @@ export class VolumeEdit implements OnInit {
   }
 
   onFileSelected(event: any): void {
-
-    if (!this.volume) return;
-
-    const file: File = event.target.files[0];
-
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      this.volumeService.uploadImage(formData).subscribe({
-        next: (dbPath) => {
-          this.volume!.imgPath = dbPath;
-        },
-        error: (err) => console.error('Erreur upload image :', err)
-      });
+      const file: File = event.target.files[0];
+      if (file) {
+        this.selectedFile = file; // Stocke pour l’envoyer avec FormData lors de createVolume
+      }
     }
-  }
 
   Retour(): void {
     this.router.navigate([`/volume/${this.volume?.id}`])
@@ -84,7 +73,13 @@ export class VolumeEdit implements OnInit {
       this.volume.imgPath = null as any;
     }
 
-    this.volumeService.updateVolume(this.volume.id, this.volume).subscribe({
+    const formData = new FormData();
+    formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.volumeService.updateVolumeWithImage(formData, this.volume).subscribe({
       next: () => {
         this.notificationService.show('Tome mis à jour avec succès', "success")
         this.router.navigate([`/volume/${this.volume?.id}`]);
@@ -112,7 +107,6 @@ export class VolumeEdit implements OnInit {
     this.volumeService.getVolumeByMangaAndNumberAndCollector(this.volume.mangaId, this.volume.numero, this.volume.collector).subscribe({
       next: (existingVolume) => {
         if (!this.volume) return;
-        this.notificationService.show(`${this.volume.collector}`,'success');
 
         if (existingVolume.id == this.volume.id) {
           this.maj();
@@ -120,7 +114,8 @@ export class VolumeEdit implements OnInit {
           this.notificationService.show("Il y a déja un tome possèdant ces caractèristiques ", 'error');
           return;
         }
-      }, 
+      },
+    
       error: (err) => {
         if (err.status == 404) {
           this.maj();

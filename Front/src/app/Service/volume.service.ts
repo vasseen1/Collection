@@ -48,11 +48,12 @@ export class VolumeService {
     return this.http.post(`${this.baseUrl}/upload`, formData, { responseType: 'text' });
   }
 
-  createVolume(volume: Volume, mangaId: number): Observable<Volume> {
-    return this.http.post<Volume>(`${this.baseUrl}/manga/${mangaId}/volumes`, volume);
-  }
-
   createVolumeWithImage(formData: FormData, mangaId: number): Observable<Volume> {
     return this.http.post<Volume>(`${this.baseUrl}/manga/${mangaId}/volumes`, formData);
   }
+
+  updateVolumeWithImage(formData: FormData, volume: Volume): Observable<Volume> {
+    return this.http.put<Volume>(`${this.baseUrl}/volume/${volume.id}`, formData);
+  }
+
 }

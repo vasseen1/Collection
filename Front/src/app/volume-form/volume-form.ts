@@ -50,7 +50,12 @@ export class VolumeForm implements OnInit {
     });
   }
 
-
+  onFileSelected(event: any): void {
+      const file: File = event.target.files[0];
+      if (file) {
+        this.selectedFile = file; // Stocke pour l’envoyer avec FormData lors de createVolume
+      }
+    }
 
 
   Retour(): void {
