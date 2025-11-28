@@ -7,8 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 import java.io.*;
 import java.nio.file.*;
@@ -21,6 +25,9 @@ public class VolumeController {
 
     @Autowired
     private VolumeService volumeService;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     // Récupérer tous les volumes d’un manga
     @GetMapping("/manga/{mangaId}/volumes")
@@ -43,24 +50,35 @@ public class VolumeController {
     }
 
     // Ajouter un nouveau volume pour un manga spécifique
+     // Ajouter un nouveau volume pour un manga spécifique (avec image optionnelle)
     @PostMapping("/manga/{mangaId}/volumes")
-    public Volume createVolume(@PathVariable Long mangaId, @RequestBody Volume volume) {
-        return volumeService.saveVolumeForManga(mangaId, volume);
+    public ResponseEntity<Volume> createVolume(
+            @PathVariable Long mangaId,
+            @RequestPart("volume") Volume volume,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws Exception {
+
+        Volume savedVolume = volumeService.saveVolume(mangaId, volume, imageFile);
+        return ResponseEntity.ok(savedVolume);
     }
 
-    // Modifier un volume
+    // Modifier un volume (avec image optionnelle)
     @PutMapping("/volume/{id}")
-    public ResponseEntity<Volume> updateVolume(@PathVariable Long id, @RequestBody Volume updatedVolume) {
+    public ResponseEntity<Volume> updateVolume(
+            @PathVariable Long id,
+            @RequestPart("volume") Volume updatedVolume,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws Exception {
+
         Optional<Volume> existingVolume = volumeService.getVolumeById(id);
         if (existingVolume.isPresent()) {
             updatedVolume.setId(id);
-            return ResponseEntity.ok(volumeService.saveVolume(updatedVolume));
+            Volume savedVolume = volumeService.saveVolume(updatedVolume.getMangaId(), updatedVolume, imageFile);
+            return ResponseEntity.ok(savedVolume);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Supprimer un volume
+   // Supprimer un volume
     @DeleteMapping("/volume/{id}")
     public ResponseEntity<Void> deleteVolume(@PathVariable Long id) {
         Optional<Volume> existingVolume = volumeService.getVolumeById(id);
@@ -84,38 +102,19 @@ public class VolumeController {
         return ResponseEntity.ok(total);
     }
 
+    // Upload indépendant d’une image (retourne URL Cloudinary)
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Fichier vide");
             }
-
-            // Nom du fichier
-            String fileName = file.getOriginalFilename();
-
-            // Dossier où sauvegarder
-            String uploadDir = "img/";
-
-            // Créer le dossier s’il n’existe pas
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            // Sauvegarde du fichier
-            Path filePath = Paths.get(uploadDir, fileName);
-            Files.write(filePath, file.getBytes());
-
-            // Retour du chemin à stocker en BDD
-            String dbPath = "img/" + fileName;
-            return ResponseEntity.ok(dbPath);
-
-        } catch (IOException e) {
+            String imageUrl = volumeService.uploadImageToCloudinary(file);
+            return ResponseEntity.ok(imageUrl);
+        } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Erreur lors de l'upload");
+            return ResponseEntity.internalServerError().body("Erreur lors de l'upload sur Cloudinary");
         }
     }
-
 }
 

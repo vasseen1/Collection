@@ -50,62 +50,58 @@ export class VolumeForm implements OnInit {
     });
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
 
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
 
-      this.volumeService.uploadImage(formData).subscribe({
-        next: (dbPath) => {
-          this.volume.imgPath = dbPath;
-        },
-        error: (err) => console.error('Erreur upload image :', err)
-      });
-    }
-  }
 
   Retour(): void {
     this.router.navigate([`/manga/${this.manga?.id}`])
   }
 
   createVolume(): void {
-    if (!this.manga) return;
+  if (!this.manga) return;
 
-    if (this.volume.numero > this.manga.volumeNb) {
-      this.notificationService.show("Le numéro du tome ne peut être supérieur au nombre total de volume de la série", "error");
-      return;
-    }
+  if (this.volume.numero > this.manga.volumeNb) {
+    this.notificationService.show("Le numéro du tome ne peut être supérieur au nombre total de volume de la série", "error");
+    return;
+  }
 
-    if (this.volume.numero < 0) {
-      this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
-      return;
-    }
+  if (this.volume.numero < 0) {
+    this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
+    return;
+  }
 
-    this.volumeService.getVolumeByMangaAndNumberAndCollector(this.manga.id, this.volume.numero, this.volume.collector).subscribe({
+  // Vérifie si le volume existe déjà
+  this.volumeService.getVolumeByMangaAndNumberAndCollector(this.manga.id, this.volume.numero, this.volume.collector)
+    .subscribe({
       next: (existingVolume) => {
         this.notificationService.show("Impossible d'ajouter ce tome car il existe déjà", "error");
-        return;
       },
-      error:(err) => {
-        if (err.status == 404) {
+      error: (err) => {
+        if (err.status === 404) {
+          // Crée FormData pour envoyer volume + image
           if (!this.manga) return;
-          this.volumeService.createVolume(this.volume,this.manga.id).subscribe({
+          const formData = new FormData();
+          formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
+          if (this.selectedFile) {
+            formData.append('image', this.selectedFile);
+          }
+
+          this.volumeService.createVolumeWithImage(formData, this.manga.id).subscribe({
             next: () => {
-              this.notificationService.show('Tome créé avec succès !', "success")
-              this.router.navigate([`/manga/${this.manga?.id}`]); 
+              this.notificationService.show('Tome créé avec succès !', "success");
+              this.router.navigate([`/manga/${this.manga?.id}`]);
             },
             error: (err) => {
               console.error('Erreur création tome :', err);
-              this.notificationService.show('Erreur lors de la création d\' tome ', "error");
+              this.notificationService.show('Erreur lors de la création du tome', "error");
             }
-          }); 
+          });
         } else {
           this.notificationService.show("Une erreur est survenue", "error");
           console.error("Une erreur est survenue : ", err);
         }
       }
-    })
-  }
+    });
+}
+
 }

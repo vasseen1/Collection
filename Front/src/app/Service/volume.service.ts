@@ -51,4 +51,8 @@ export class VolumeService {
   createVolume(volume: Volume, mangaId: number): Observable<Volume> {
     return this.http.post<Volume>(`${this.baseUrl}/manga/${mangaId}/volumes`, volume);
   }
+
+  createVolumeWithImage(formData: FormData, mangaId: number): Observable<Volume> {
+    return this.http.post<Volume>(`${this.baseUrl}/manga/${mangaId}/volumes`, formData);
+  }
 }

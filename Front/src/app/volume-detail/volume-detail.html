@@ -3,7 +3,7 @@
     <div class="cover">
       <ng-container *ngIf="volume.imgPath; else noImgText">
         <img 
-          [src]="'http://localhost:8080/' + volume.imgPath"
+          [src]="volume.imgPath"
           [alt]="'Tome ' + volume.numero"
         />
       </ng-container>

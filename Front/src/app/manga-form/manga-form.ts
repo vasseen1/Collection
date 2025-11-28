@@ -53,17 +53,8 @@ export class MangaForm implements OnInit {
 
     onFileSelected(event: any): void {
       const file: File = event.target.files[0];
-
       if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        this.volumeService.uploadImage(formData).subscribe({
-          next: (dbPath) => {
-            this.volume.imgPath = dbPath;
-          },
-          error: (err) => console.error('Erreur upload image :', err)
-        });
+        this.selectedFile = file; // Stocke pour l’envoyer avec FormData lors de createVolume
       }
     }
 
@@ -119,9 +110,15 @@ export class MangaForm implements OnInit {
           if (err.status == 404) {
             this.mangaService.createManga(this.manga).subscribe({
                     next: (createdManga) => {
-                      this.volume.mangaId = createdManga.id;
 
-                      this.volumeService.createVolume(this.volume,this.volume.mangaId).subscribe({
+                      this.volume.mangaId = createdManga.id;
+                      const formData = new FormData();
+                      formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
+                      if (this.selectedFile) {
+                        formData.append('image', this.selectedFile);
+                      }
+
+                      this.volumeService.createVolumeWithImage(formData, createdManga.id).subscribe({
                         next: () => {
                           this.notificationService.show('Série et Tome créées avec succès !',"success");
                           this.router.navigate([`/manga/${this.volume.mangaId}`]);

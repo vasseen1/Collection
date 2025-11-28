@@ -3,7 +3,7 @@
     <div class="cover">
       <ng-container *ngIf="volumes && volumes.length > 0; else noVolume">
         <ng-container *ngIf="firstVolumeWithImage; else noImg">
-          <img [src]="'http://localhost:8080/' + firstVolumeWithImage.imgPath" 
+          <img [src]="firstVolumeWithImage.imgPath" 
               [alt]="manga.name" />
         </ng-container>
       </ng-container>
@@ -55,7 +55,7 @@
             <!-- Conteneur de l'image ou du message -->
             <div class="volume-cover">
               <ng-container *ngIf="volume.imgPath; else noImg">
-                <img [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+                <img [src]="volume.imgPath" [alt]="'Tome ' + volume.numero" />
               </ng-container>
               <ng-template #noImg>
                 <p>Pas de cover dispo pour ce tome</p>
@@ -88,7 +88,7 @@
             <!-- Conteneur de l'image ou du message -->
             <div class="volume-cover">
               <ng-container *ngIf="volume.imgPath; else noImg">
-                <img [src]="'http://localhost:8080/' + volume.imgPath" [alt]="'Tome ' + volume.numero" />
+                <img [src]="volume.imgPath" [alt]="'Tome ' + volume.numero" />
               </ng-container>
               <ng-template #noImg>
                 <p>Pas de cover dispo pour ce tome</p>
