@@ -52,8 +52,8 @@ export class VolumeService {
     return this.http.post<Volume>(`${this.baseUrl}/manga/${mangaId}/volumes`, formData);
   }
 
-  updateVolumeWithImage(formData: FormData, volume: Volume): Observable<Volume> {
-    return this.http.put<Volume>(`${this.baseUrl}/volume/${volume.id}`, formData);
+  updateVolumeWithImage(formData: FormData, volume: Volume, deleteImage: boolean): Observable<Volume> {
+    return this.http.put<Volume>(`${this.baseUrl}/volume/${volume.id}?deleteImage=${deleteImage}`, formData);
   }
 
 }

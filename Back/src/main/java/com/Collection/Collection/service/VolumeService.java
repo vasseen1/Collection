@@ -9,6 +9,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 
 
 import java.util.List;
@@ -37,19 +38,55 @@ public class VolumeService {
         return volumeRepository.save(volume);
     }
 
-    public Volume saveVolume(Long mangaId, Volume volume, MultipartFile imageFile) throws Exception {
+    public Volume saveVolume(Long mangaId, Volume volume, MultipartFile imageFile, boolean deleteImage) throws Exception {
+        if (deleteImage) {
+            // Supprimer l'image actuelle de Cloudinary si imgPath existe
+            if (volume.getImgPath() != null && !volume.getImgPath().isEmpty()) {
+                // Récupérer le public_id à partir de l'URL
+                String publicId = volume.getImgPath().substring(volume.getImgPath().lastIndexOf('/') + 1, volume.getImgPath().lastIndexOf('.'));
+                cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+                volume.setImgPath(null);
+            }
+        }
+
         if (imageFile != null && !imageFile.isEmpty()) {
             Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
             String imageUrl = uploadResult.get("secure_url").toString();
-            volume.setImgPath(imageUrl); // assume que Volume a un champ imageUrl
+            volume.setImgPath(imageUrl);
         }
+
         volume.setMangaId(mangaId);
         return volumeRepository.save(volume);
     }
 
+
     public void deleteVolume(Long id) {
+        Optional<Volume> volume = volumeRepository.findById(id);
+        
+        if (volume.isPresent()) {
+            Volume v = volume.get();
+
+            if (v.getImgPath() != null && !v.getImgPath().isEmpty()) {
+                try {
+                    // Récupérer le public_id depuis l'URL
+                    String publicId = v.getImgPath().substring(
+                            v.getImgPath().lastIndexOf('/') + 1,
+                            v.getImgPath().lastIndexOf('.')
+                    );
+
+                    cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+                    v.setImgPath(null);
+
+                } catch (IOException e) {
+                    // Log propre pour éviter un crash silencieux
+                    System.err.println("Erreur Cloudinary lors de la suppression de l'image : " + e.getMessage());
+                }
+            }
+        }
+
         volumeRepository.deleteById(id);
     }
+
 
     public void deleteAll(List<Volume> volumes) {
         for (Volume volume: volumes) {

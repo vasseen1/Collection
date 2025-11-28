@@ -57,7 +57,7 @@ public class VolumeController {
             @RequestPart("volume") Volume volume,
             @RequestPart(value = "image", required = false) MultipartFile imageFile) throws Exception {
 
-        Volume savedVolume = volumeService.saveVolume(mangaId, volume, imageFile);
+        Volume savedVolume = volumeService.saveVolume(mangaId, volume, imageFile, false);
         return ResponseEntity.ok(savedVolume);
     }
 
@@ -66,12 +66,13 @@ public class VolumeController {
     public ResponseEntity<Volume> updateVolume(
             @PathVariable Long id,
             @RequestPart("volume") Volume updatedVolume,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws Exception {
+            @RequestPart(value = "image", required = false) MultipartFile imageFile,
+            @RequestParam(value = "deleteImage", defaultValue = "false") boolean deleteImage) throws Exception {
 
         Optional<Volume> existingVolume = volumeService.getVolumeById(id);
         if (existingVolume.isPresent()) {
             updatedVolume.setId(id);
-            Volume savedVolume = volumeService.saveVolume(updatedVolume.getMangaId(), updatedVolume, imageFile);
+            Volume savedVolume = volumeService.saveVolume(updatedVolume.getMangaId(), updatedVolume, imageFile, deleteImage);
             return ResponseEntity.ok(savedVolume);
         } else {
             return ResponseEntity.notFound().build();

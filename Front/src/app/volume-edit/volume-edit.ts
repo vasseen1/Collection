@@ -69,9 +69,6 @@ export class VolumeEdit implements OnInit {
       this.notificationService.show("Une erreur est survenue", "error");
       return;
     }
-    if (this.deleteImage) {
-      this.volume.imgPath = null as any;
-    }
 
     const formData = new FormData();
     formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
@@ -79,7 +76,7 @@ export class VolumeEdit implements OnInit {
       formData.append('image', this.selectedFile);
     }
 
-    this.volumeService.updateVolumeWithImage(formData, this.volume).subscribe({
+    this.volumeService.updateVolumeWithImage(formData, this.volume, this.deleteImage).subscribe({
       next: () => {
         this.notificationService.show('Tome mis à jour avec succès', "success")
         this.router.navigate([`/volume/${this.volume?.id}`]);
