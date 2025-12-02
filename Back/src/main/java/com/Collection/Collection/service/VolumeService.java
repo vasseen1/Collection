@@ -102,10 +102,6 @@ public class VolumeService {
         return volumeRepository.countDistinctByMangaId(mangaId);
     }
 
-    public Optional<Volume> getVolumeByMangaIdAndByNumeroAndByCollector(Long mangaId, Long Numero, Boolean collector) {
-        return volumeRepository.findByMangaIdAndNumeroAndCollector(mangaId, Numero, collector);
-    }
-
     public String uploadImageToCloudinary(MultipartFile file) throws Exception {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
         return uploadResult.get("secure_url").toString();

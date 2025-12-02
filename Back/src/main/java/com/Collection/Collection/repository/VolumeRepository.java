@@ -15,8 +15,7 @@ import org.springframework.data.repository.query.Param;
 public interface VolumeRepository extends JpaRepository<Volume, Long> {
     List<Volume> findByMangaIdOrderByNumeroAsc(Long mangaId);
     Optional<Volume> findFirstByMangaIdOrderByNumeroAsc(Long mangaId);
-    Optional<Volume> findByMangaIdAndNumeroAndCollector(Long mangaId, Long Numero, Boolean collector);
-
+    
     @Query("SELECT COUNT(DISTINCT v.numero) FROM Volume v WHERE v.mangaId = :mangaId")
     Long countDistinctByMangaId(@Param("mangaId") Long mangaId);
 }

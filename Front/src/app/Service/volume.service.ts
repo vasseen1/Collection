@@ -28,10 +28,6 @@ export class VolumeService {
     return this.http.get<Volume[]>(`${this.baseUrl}/manga/${mangaId}/volumes`);
   }
 
-  getVolumeByMangaAndNumberAndCollector(mangaId: Number, volumeNumber: Number, collector: Boolean): Observable<Volume> {
-    return this.http.get<Volume>(`${this.baseUrl}/manga/${mangaId}/volumeNumber/${volumeNumber}/collector/${collector}`);
-  }
-
   getVolumeById(volumeId: number): Observable<Volume> {
     return this.http.get<Volume>(`${this.baseUrl}/volume/${volumeId}`)
   }
