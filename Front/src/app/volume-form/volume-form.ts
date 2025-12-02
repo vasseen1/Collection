@@ -63,50 +63,33 @@ export class VolumeForm implements OnInit {
   }
 
   createVolume(): void {
-  if (!this.manga) return;
+    if (!this.manga) return;
 
-  if (this.volume.numero > this.manga.volumeNb) {
-    this.notificationService.show("Le numéro du tome ne peut être supérieur au nombre total de volume de la série", "error");
-    return;
-  }
+    if (this.volume.numero > this.manga.volumeNb) {
+      this.notificationService.show("Le numéro du tome ne peut être supérieur au nombre total de volume de la série", "error");
+      return;
+    }
 
-  if (this.volume.numero < 0) {
-    this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
-    return;
-  }
+    if (this.volume.numero < 0) {
+      this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
 
-  // Vérifie si le volume existe déjà
-  this.volumeService.getVolumeByMangaAndNumberAndCollector(this.manga.id, this.volume.numero, this.volume.collector)
-    .subscribe({
-      next: (existingVolume) => {
-        this.notificationService.show("Impossible d'ajouter ce tome car il existe déjà", "error");
+    this.volumeService.createVolumeWithImage(formData, this.manga.id).subscribe({
+      next: () => {
+        this.notificationService.show('Tome créé avec succès !', "success");
+        this.router.navigate([`/manga/${this.manga?.id}`]);
       },
       error: (err) => {
-        if (err.status === 404) {
-          // Crée FormData pour envoyer volume + image
-          if (!this.manga) return;
-          const formData = new FormData();
-          formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
-          if (this.selectedFile) {
-            formData.append('image', this.selectedFile);
-          }
-
-          this.volumeService.createVolumeWithImage(formData, this.manga.id).subscribe({
-            next: () => {
-              this.notificationService.show('Tome créé avec succès !', "success");
-              this.router.navigate([`/manga/${this.manga?.id}`]);
-            },
-            error: (err) => {
-              console.error('Erreur création tome :', err);
-              this.notificationService.show('Erreur lors de la création du tome', "error");
-            }
-          });
-        } else {
-          this.notificationService.show("Une erreur est survenue", "error");
-          console.error("Une erreur est survenue : ", err);
-        }
+        console.error('Erreur création tome :', err);
+        this.notificationService.show('Erreur lors de la création du tome', "error");
       }
     });
-}
-
+  } 
 }

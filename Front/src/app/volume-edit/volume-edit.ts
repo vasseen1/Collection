@@ -64,13 +64,19 @@ export class VolumeEdit implements OnInit {
     this.router.navigate([`/volume/${this.volume?.id}`])
   }
 
-  maj() {
+  updateVolume():void {
+    if (!this.volume || !this.manga) return;
 
-    if (!this.volume) {
-      this.notificationService.show("Une erreur est survenue", "error");
+    if (this.volume.numero > this.manga.volumeNb) {
+      this.notificationService.show("Le numéro du tome ne peut être supérieur au nombre total de volume de la série", "error");
       return;
     }
 
+    if (this.volume.numero < 0) {
+      this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
+      return;
+    }
+    
     const formData = new FormData();
     formData.append('volume', new Blob([JSON.stringify(this.volume)], { type: 'application/json' }));
     if (this.selectedFile) {
@@ -87,42 +93,6 @@ export class VolumeEdit implements OnInit {
         this.notificationService.show('Erreur lors de la mise à jour du Tome',"error");
       }
     });
-  }
-
-  updateVolume():void {
-    if (!this.volume || !this.manga) return;
-
-    if (this.volume.numero > this.manga.volumeNb) {
-      this.notificationService.show("Le numéro du tome ne peut être supérieur au nombre total de volume de la série", "error");
-      return;
-    }
-
-    if (this.volume.numero < 0) {
-      this.notificationService.show("Le numéro du tome ne peut être négatif", "error");
-      return;
-    }
-
-    this.volumeService.getVolumeByMangaAndNumberAndCollector(this.volume.mangaId, this.volume.numero, this.volume.collector).subscribe({
-      next: (existingVolume) => {
-        if (!this.volume) return;
-
-        if (existingVolume.id == this.volume.id) {
-          this.maj();
-        } else {
-          this.notificationService.show("Il y a déja un tome possèdant ces caractèristiques ", 'error');
-          return;
-        }
-      },
-    
-      error: (err) => {
-        if (err.status == 404) {
-          this.maj();
-        } else {
-          this.notificationService.show("Impossible", 'error');
-          return;
-        }
-      }
-    })    
   }
 
 }

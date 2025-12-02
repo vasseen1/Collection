@@ -76,6 +76,20 @@ export class MangaEdit implements OnInit {
     this.router.navigate([`/manga/${this.manga?.id}`])
   }
 
+  maj(): void {
+    if(!this.manga) return;
+          this.mangaService.updateManga(this.manga.id, this.manga).subscribe({
+            next: () => {
+              this.notificationService.show('Série mise à jour avec succès',"success");
+              this.router.navigate([`/manga/${this.manga?.id}`]);
+            },
+            error: (err) => {
+              console.error('Erreur lors de la mise à jour de la série : ', err);
+              this.notificationService.show('Une erreur est survenue lors de la mise à jour de la série', 'error');
+            }
+          });
+  }
+
   updateManga():void {
     if (!this.manga) return;
 
@@ -104,15 +118,26 @@ export class MangaEdit implements OnInit {
       return;
     }
 
-    this.mangaService.updateManga(this.manga.id, this.manga).subscribe({
-      next: () => {
-        this.notificationService.show('Série mise à jour avec succès',"success");
-        this.router.navigate([`/manga/${this.manga?.id}`]);
+    this.mangaService.getMangaByName(this.manga.name).subscribe({
+      next: (existingManga) => {
+        if (existingManga.id != this.manga?.id) {
+          this.notificationService.show("Ce manga existe déjà", 'error');
+          return;
+        } else {
+          this.maj();
+        }
+        
       },
       error: (err) => {
-        console.error('Erreur lors de la mise à jour de la série : ', err);
-        this.notificationService.show('Une erreur est survenue lors de la mise à jour de la série', 'error');
+        if (err.status == 404) {
+          this.maj()
+        } else {
+          console.error('Une erreur est survenue : ', err);
+          this.notificationService.show('Une erreur est survenue', 'error');
+        }
       }
-    });
+    })
+
+    
   }
 }
