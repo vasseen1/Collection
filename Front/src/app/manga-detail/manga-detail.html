@@ -63,7 +63,10 @@
             </div>
 
             <!-- Texte du tome -->
-            <p>Tome {{ volume.numero }}</p>
+            <p *ngIf="!volume.jaqAlt; else alternative">Tome {{ volume.numero }}</p>
+            <ng-template #alternative>
+              <p> Tome {{volume.numero}} (Alternatif)</p>
+            </ng-template>
           </div>
         </a>
       </div>

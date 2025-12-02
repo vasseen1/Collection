@@ -24,6 +24,9 @@ public class Volume {
 
     private boolean collector;
 
+    // Jaquette alternative
+    private boolean jaqAlt;
+
     //GETTER
     public Long getId() {
         return this.id;
@@ -47,6 +50,10 @@ public class Volume {
 
     public boolean getCollector() {
         return this.collector;
+    }
+
+    public boolean getJaqAlt() {
+        return this.jaqAlt;
     }
 
     //SETTER 
@@ -73,6 +80,10 @@ public class Volume {
     public void setCollector(boolean newCollector) {
         this.collector = newCollector;
     }
+
+    public void setJaqAlt(boolean newJaqAlt) {
+        this.jaqAlt = newJaqAlt;
+    } 
 
 
 }

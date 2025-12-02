@@ -46,15 +46,24 @@
           <label>{{manga.name}}</label> 
         </div>
 
-        <div class="twoInOne">
-          <div class="form-group">
-            <label>Numéro du tome :</label>
-            <input type="number" name="numero" [(ngModel)]="volume.numero" class="number"/>
-          </div>
+        
+        <div class="form-group">
+          <label>Numéro du tome :</label>
+          <input type="number" name="numero" [(ngModel)]="volume.numero" class="number"/>
+        </div>
 
+        <div class="twoInOne">
           <div class="form-group">
             <label>Collector :</label>
             <select name="collector" [(ngModel)]="volume.collector">
+              <option value="true">Oui</option>
+              <option value="false">Non</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Jaquette alternative:</label>
+            <select name="jaqAlt" [(ngModel)]="volume.jaqAlt">
               <option value="true">Oui</option>
               <option value="false">Non</option>
             </select>

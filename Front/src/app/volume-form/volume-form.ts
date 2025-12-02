@@ -22,7 +22,8 @@ export class VolumeForm implements OnInit {
     numero: 1,
     imgPath: '',
     resume: '',
-    collector: false
+    collector: false,
+    jaqAlt: false
   };
   selectedFile?: File;
 

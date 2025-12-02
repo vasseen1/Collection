@@ -10,6 +10,7 @@ export interface Volume {
   imgPath: string;
   resume: string;
   collector: boolean;
+  jaqAlt: boolean;
 }
 
 @Injectable({
